@@ -15,4 +15,19 @@ async function getTalkersData() {
     }
   }
 
-module.exports = getTalkersData;
+async function getTalkersId(talkId) {
+  try {
+    const data = await getTalkersData();
+
+    const idFilter = data.filter(({ id }) => id === talkId);
+
+    return idFilter;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+module.exports = { 
+  getTalkersData,
+  getTalkersId,
+};
