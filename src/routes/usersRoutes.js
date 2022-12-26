@@ -19,7 +19,7 @@ router.post('/login', async (req, res) => {
 
     return res.status(HTTP_OK_STATUS).json({ token });
   } catch (err) {
-    return res.status(HTTP_BADREQUEST_STATUS).json({ message: 'err.message' });
+    return res.status(HTTP_BADREQUEST_STATUS).json({ message: err.message });
   }
 });
 
