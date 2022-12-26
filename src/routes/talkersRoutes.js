@@ -16,6 +16,7 @@ const router = express.Router();
 const HTTP_OK_STATUS = 200;
 const HTTP_NOTFOUND_STATUS = 404;
 const HTTP_CREATED_STATUS = 201;
+const HTTP_NOCONTENT_STATUS = 204;
 
 router.get('/talker', async (req, res) => {
   const data = await getTalkersData();
@@ -82,6 +83,18 @@ ageValidation, talkValidation, rateValidation, async (req, res) => {
 
   await writeFile(dataBase, JSON.stringify(filtering));
   return res.status(200).json(newTalker);
+});
+
+router.delete('/talker/:id', tokenValidation, async (req, res) => {
+  const { id } = req.params;
+
+  const data = await getTalkersData();
+
+  const filtering = data.filter((talker) => Number(talker.id) !== Number(id));
+
+  await writeFile(dataBase, JSON.stringify(filtering));
+
+  return res.status(HTTP_NOCONTENT_STATUS).json('');
 });
 
 module.exports = router;
