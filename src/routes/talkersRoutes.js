@@ -61,4 +61,27 @@ ageValidation, talkValidation, rateValidation, async (req, res) => {
   return res.status(HTTP_CREATED_STATUS).json(newTalker);
 });
 
+router.put('/talker/:id', 
+tokenValidation, nameValidation, 
+ageValidation, talkValidation, rateValidation, async (req, res) => {
+  const { id } = req.params;
+
+  const { name, age, talk } = req.body;
+
+  const talkers = await getTalkersData();
+
+  const newTalker = {
+    id: Number(id),
+    name,
+    age,
+    talk,
+  };
+
+  const filtering = talkers.filter((talker) => Number(talker.id) !== Number(id));
+  filtering.push(newTalker);
+
+  await writeFile(dataBase, JSON.stringify(filtering));
+  return res.status(200).json(newTalker);
+});
+
 module.exports = router;
