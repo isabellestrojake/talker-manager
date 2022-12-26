@@ -1,9 +1,11 @@
 const express = require('express');
 const talkersRoutes = require('./routes/talkersRoutes');
+const usersRoutes = require('./routes/usersRoutes');
 
 const app = express();
 app.use(express.json());
 app.use(talkersRoutes);
+app.use(usersRoutes);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
