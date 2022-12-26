@@ -1,10 +1,21 @@
 const express = require('express');
-const { getTalkersData, getTalkersId } = require('../utils/fsUtils');
+const { writeFile } = require('fs/promises');
+const path = require('path');
+const { getTalkersData, 
+  getTalkersId, 
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  rateValidation } = require('../utils/fsUtils');
+
+const dataBase = path.resolve(__dirname, '../talker.json');
 
 const router = express.Router();
 
 const HTTP_OK_STATUS = 200;
 const HTTP_NOTFOUND_STATUS = 404;
+const HTTP_CREATED_STATUS = 201;
 
 router.get('/talker', async (req, res) => {
   const data = await getTalkersData();
@@ -27,5 +38,27 @@ router.get('/talker/:id', async (req, res) => {
     return res.status(HTTP_NOTFOUND_STATUS).json({ message: 'Pessoa palestrante não encontrada' });
   }
 }); 
+
+router.post('/talker',
+tokenValidation, nameValidation, 
+ageValidation, talkValidation, rateValidation, async (req, res) => {
+  const { name, age, talk } = req.body;
+
+  const talkers = await getTalkersData();
+
+  const id = talkers.length + 1;
+
+  const newTalker = {
+    id,
+    name,
+    age,
+    talk,
+  };
+  const newTalkersData = [...talkers, newTalker];
+
+  await writeFile(dataBase, JSON.stringify(newTalkersData));
+
+  return res.status(HTTP_CREATED_STATUS).json(newTalker);
+});
 
 module.exports = router;
