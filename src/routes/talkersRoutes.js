@@ -82,7 +82,7 @@ ageValidation, talkValidation, rateValidation, async (req, res) => {
   filtering.push(newTalker);
 
   await writeFile(dataBase, JSON.stringify(filtering));
-  return res.status(200).json(newTalker);
+  return res.status(HTTP_OK_STATUS).json(newTalker);
 });
 
 router.delete('/talker/:id', tokenValidation, async (req, res) => {
